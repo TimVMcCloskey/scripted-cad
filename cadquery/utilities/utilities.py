@@ -1,7 +1,5 @@
 import cadquery as cq
-import vtk
 from cadquery.vis import show
-    
  
 #******************************************
 #
@@ -52,38 +50,22 @@ def torus(radius1, radius2, pnt_x, pnt_y, pnt_z, dir_x, dir_y, dir_z):
         dir=cq.Vector(dir_x, dir_y, dir_z)
     )
 
-
-
-#******************************************
-#
-# VIEW FUNCTIONS
-#
-#****************************************** 
-
 def front(obj, zoom=1.0):
-
-    """Front view — XY plane"""
     show(obj, elevation=0, azimuth=0, roll=0, zoom=zoom, clipping_range=(0.1, 10000))
 
 def top(obj, zoom=1.0):
-
-    """Top view — X right, Z down"""
     vtk.vtkObject.GlobalWarningDisplayOff()
     show(obj, elevation=-90, azimuth=0, roll=90, zoom=zoom,
          viewup=(0, 0, -1), clipping_range=(0.1, 10000))
     vtk.vtkObject.GlobalWarningDisplayOn()
 
 def right(obj, zoom=1.0):
-
-    """Right side view"""
     show(obj, elevation=0, azimuth=90, roll=0, zoom=zoom, clipping_range=(0.1, 10000))
 
 def left(obj, zoom=1.0):
-
-    """Left side view"""
     show(obj, elevation=0, azimuth=-90, roll=0, zoom=zoom, clipping_range=(0.1, 10000))
 
 def iso(obj, zoom=1.0):
-
-    """Isometric view"""
     show(obj, elevation=-35, azimuth=45, roll=0, zoom=zoom, clipping_range=(0.1, 10000))
+
+
