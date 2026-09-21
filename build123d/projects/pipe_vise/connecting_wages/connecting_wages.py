@@ -1,4 +1,6 @@
 import subprocess
+import os
+
 subprocess.run([
     r'C:\Users\Tim\AppData\Local\build123d-studio\runtime\uv\uv.exe',
     'pip', 'install', 'bd_warehouse',
@@ -7,6 +9,7 @@ subprocess.run([
 
 from build123d import *
 from build123d_studio import show
+
 from bd_warehouse.thread import AcmeThread
 
 
@@ -139,9 +142,6 @@ core = Location((0, THREAD_LENGTH/2, 0)) * core
 
 thread_solid = thread + core
 
-#thread = Location((0, -bb_thread := thread.bounding_box().min.Y, 0)) * thread
-#thread_solid = Location((0, -30, 0)) * thread
-
 
 #******************************************
 #
@@ -150,5 +150,7 @@ thread_solid = thread + core
 #******************************************
 
 result = body - mount_hole_left - mount_hole_right - thread_solid
+
+export_step(result, os.path.join(os.getcwd(), "connecting_wages.step"))
 
 show(result)

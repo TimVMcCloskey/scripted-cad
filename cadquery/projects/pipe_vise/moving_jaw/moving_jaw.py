@@ -114,10 +114,6 @@ result = body.cut(pin_hole).cut(guide_groove)
 result = result.mirror(result.faces(">X"), union=True)
 result = result.cut(counter_sunk_drill)
 
-#result.export("C:/Users/Tim/tim/cadquery_pipevise/moving_jaw.step")
+result.export(os.path.join(os.path.dirname(__file__), "moving_jaw.step"))
 
 front(result)
-# top(result)
-# right(result)
-# left(result)
-# iso(result)

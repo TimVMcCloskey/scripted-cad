@@ -104,6 +104,9 @@ bottom = bottom - groove
 # assembly
 #
 #*********************************
-spindle = thread_solid + neck + top + bottom
 
-show(spindle)
+result = thread_solid + neck + top + bottom
+
+export_step(result, os.path.join(os.getcwd(), "spindle.step"))
+
+show(result)

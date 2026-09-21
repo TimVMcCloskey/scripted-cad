@@ -162,4 +162,6 @@ result = result.mirror(Plane.YZ) + result
 
 result = result - counter_sunk_drill
 
+export_step(result, os.path.join(os.getcwd(), "moving_jaw.step"))
+
 show(result)

@@ -99,13 +99,14 @@ bottom = cq.Workplane().add(bottom_outer).cut(
 #
 #*********************************
 
-spindle = (
+result = (
     thread_solid
     .union(cq.Workplane().add(neck))
     .union(top)
     .union(bottom)
 )
 
-#result.export("C:/Users/Tim/tim/cadquery_pipevise/spindle.step")
 
-front(spindle)
+result.export(os.path.join(os.path.dirname(__file__), "spindle.step"))
+
+front(result)

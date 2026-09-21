@@ -152,6 +152,6 @@ thread_solid = thread_solid.translate((0, -30, 0))
 # Cut holes and thread
 result = body.cut(mount_hole_left).cut(mount_hole_right).cut(thread_solid)
 
-result.export("C:/Users/Tim/tim/cadquery/projects/pipe_vise/connecting_wages.step")
+result.export(os.path.join(os.path.dirname(__file__), "connecting_wages.step"))
 
 front(result)
