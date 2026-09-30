@@ -1,15 +1,5 @@
-import subprocess
-import os
-
-subprocess.run([
-    r'C:\Users\Tim\AppData\Local\build123d-studio\runtime\uv\uv.exe',
-    'pip', 'install', 'bd_warehouse',
-    '--python', r'C:\Users\Tim\AppData\Local\build123d-studio\runtime\.venv'
-], capture_output=True)
-
 from build123d import *
-from build123d_studio import show
-
+from ocp_viewer import show
 from bd_warehouse.thread import AcmeThread
 
 
@@ -151,6 +141,6 @@ thread_solid = thread + core
 
 result = body - mount_hole_left - mount_hole_right - thread_solid
 
-export_step(result, os.path.join(os.getcwd(), "connecting_wages.step"))
+export_step(result, "connecting_wages.step")
 
 show(result)

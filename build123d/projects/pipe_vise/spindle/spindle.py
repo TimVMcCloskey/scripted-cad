@@ -1,13 +1,6 @@
-import subprocess
-subprocess.run([
-    r'C:\Users\Tim\AppData\Local\build123d-studio\runtime\uv\uv.exe',
-    'pip', 'install', 'bd_warehouse',
-    '--python', r'C:\Users\Tim\AppData\Local\build123d-studio\runtime\.venv'
-], capture_output=True)
-
 from build123d import *
-from build123d_studio import show
 from bd_warehouse.thread import AcmeThread
+from ocp_viewer import show
 
 #******************************************
 #
@@ -107,6 +100,7 @@ bottom = bottom - groove
 
 result = thread_solid + neck + top + bottom
 
-export_step(result, os.path.join(os.getcwd(), "spindle.step"))
+export_step(result,"spindle.step")
+#export_gltf(result, "spindle.gltf")
 
 show(result)

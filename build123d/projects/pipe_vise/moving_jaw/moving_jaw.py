@@ -1,5 +1,5 @@
 from build123d import *
-from build123d_studio import show
+from ocp_viewer import show
 
 # ******************************************
 #
@@ -162,6 +162,6 @@ result = result.mirror(Plane.YZ) + result
 
 result = result - counter_sunk_drill
 
-export_step(result, os.path.join(os.getcwd(), "moving_jaw.step"))
+export_step(result, "moving_jaw.step")
 
 show(result)
