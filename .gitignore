@@ -1,2 +1,6 @@
 *.step
 *.STEP
+*.blend
+*.gltf
+*.png
+*.dxf

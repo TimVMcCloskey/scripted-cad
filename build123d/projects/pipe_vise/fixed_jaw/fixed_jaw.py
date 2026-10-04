@@ -1,70 +1,137 @@
 from build123d import *
 from ocp_viewer import show
 
-# === Dimensions ===
+#######################################
+#
+# parameters
+#
+#######################################
+
 body_width      = 228   # X
 body_height     = 74    # Y
 body_depth      = 80    # Z
-body_center_y   = body_height / 2   # 37, center Y
 
-groove_depth  = 34          # V-groove depth from top
-groove_apex_y = body_height - groove_depth  # 40
+body_side = body_width / 2
 
-pocket_w    = 40    # X
-pocket_h    = 41    # Y
-pocket_d    = 82    # Z
-pocket_x    = 96    # distance from center
-pocket_cy   = 54    # Y center
+front_face = 40
+trough_floor = 30
 
-slot_w      = 300   # X
-slot_h      = 40    # Y
-slot_d      = 41    # Z
-slot_cy     = 54    # Y center
+trough_width = body_width
+trough_height = 44
+trough_depth = 40
 
-vhole_d     = 20    # diameter, runs along Y
-vhole_x     = 94
-vhole_h     = 100   # oversized to ensure full cut
+shoulder_width = 40
+shoulder_height = 44
+shoulder_depth = body_depth
 
-hhole_d     = 20    # diameter, runs along Z
-hhole_x     = 54
-hhole_y     = 52
-hhole_h     = body_depth  # 80
+apex = body_height - 34
 
-# === Geometry ===
-body = Box(body_width, body_height, body_depth,
-           align=(Align.CENTER, Align.CENTER, Align.CENTER))
-body = body.moved(Location((0, body_center_y, 0)))
+front_hole_radius = 10
+front_hole_x = 54
+front_hole_y = body_height - 22
 
-vgroove_wire = Wire.make_polygon([
-    Vector(0, groove_apex_y, 0),
-    Vector(-groove_depth, body_height, 0),
-    Vector( groove_depth, body_height, 0),
-])
-vgroove_face = make_face(vgroove_wire)
-vgroove = extrude(vgroove_face, amount=body_depth / 2, both=True)
+top_hole_radius = 10
+top_hole_x = body_side - 20
 
-pocket_l = Box(pocket_w, pocket_h, pocket_d,
-               align=(Align.CENTER, Align.CENTER, Align.CENTER))
-pocket_l = pocket_l.moved(Location((-pocket_x, pocket_cy, 0)))
-pocket_r = pocket_l.mirror(Plane.YZ)
 
-slot = Box(slot_w, slot_h, slot_d,
-           align=(Align.CENTER, Align.CENTER, Align.CENTER))
-slot = slot.moved(Location((0, slot_cy, 0)))
 
-vhole_l = Cylinder(radius=vhole_d / 2, height=vhole_h,
-                   align=(Align.CENTER, Align.CENTER, Align.CENTER))
-vhole_l = vhole_l.rotate(Axis.X, 90)
-vhole_l = vhole_l.moved(Location((-vhole_x, body_center_y, 0)))
-vhole_r = vhole_l.mirror(Plane.YZ)
+#######################################
+#
+# create body
+#
+#######################################
 
-hhole_l = Cylinder(radius=hhole_d / 2, height=hhole_h,
-                   align=(Align.CENTER, Align.CENTER, Align.CENTER))
-hhole_l = hhole_l.moved(Location((-hhole_x, hhole_y, 0)))
-hhole_r = hhole_l.mirror(Plane.YZ)
+body = Box( body_width, body_height, body_depth, 
+            align = (Align.CENTER, Align.MIN, Align.CENTER) )
 
-result = (body - vgroove - pocket_l - pocket_r
-          - slot - vhole_l - vhole_r - hhole_l - hhole_r)
+#######################################
+#
+# create trough
+#
+#######################################
 
-export_step(result, "fixed_jaw.step")
-show(result)
+trough = Box( trough_width, trough_height, trough_depth, 
+              align = (Align.CENTER, Align.MIN, Align.CENTER) )
+trough = Pos(0, trough_floor, 0) * trough
+
+body = body - trough
+
+#######################################
+#
+# create shoulder
+#
+#######################################
+
+shoulder_left = Box( shoulder_width, shoulder_height, shoulder_depth,
+                     align = (Align.MIN, Align.MIN, Align.CENTER) )
+shoulder_left = Pos( -body_side, trough_floor, 0) * shoulder_left
+
+body = body - shoulder_left
+
+shoulder_right = Box( shoulder_width, shoulder_height, shoulder_depth,
+                     align = (Align.MAX, Align.MIN, Align.CENTER) )
+shoulder_right = Pos( body_side, trough_floor, 0) * shoulder_right
+
+body = body - shoulder_right
+
+#######################################
+#
+# prism cut
+#
+#######################################
+
+pts = [ (0, 0), (-34, 34), (34, 34) ]
+triangle = Polygon(pts)
+
+current_min_y = triangle.bounding_box().min.Y
+y_shift =  apex - current_min_y
+triangle = Pos(0, y_shift, 0) * triangle
+
+prism = extrude(triangle, amount = body_depth, both=True)
+
+body = body - prism
+
+
+#######################################
+#
+# front holes
+#
+#######################################
+
+hole_left = Cylinder( radius= front_hole_radius, height = body_depth,
+                      align=(Align.CENTER, Align.CENTER, Align.CENTER) )
+
+hole_left = Pos(-front_hole_x, front_hole_y, 0) * hole_left
+
+body = body - hole_left
+
+hole_right = Cylinder( radius= front_hole_radius, height = body_depth,
+                       align=(Align.CENTER, Align.CENTER, Align.CENTER) )
+
+hole_right = Pos(front_hole_x, front_hole_y, 0) * hole_right
+
+body = body - hole_right
+
+#######################################
+#
+# top holes
+#
+#######################################
+
+hole_left = Cylinder( radius= top_hole_radius, height = body_height,
+                      align=(Align.CENTER, Align.CENTER, Align.CENTER) )
+hole_left = Rot(90, 0, 0) * hole_left
+hole_left = Pos(-top_hole_x, 0, 0) * hole_left
+
+body = body - hole_left
+
+hole_right = Cylinder( radius= top_hole_radius, height = body_height,
+                       align=(Align.CENTER, Align.CENTER, Align.CENTER) )
+hole_right = Rot(90, 0, 0) * hole_right
+hole_right = Pos(top_hole_x, 0, 0) * hole_right
+
+body = body - hole_right
+
+export_step(body, "fixed_jaw.step")
+
+show(body)

@@ -1,0 +1,11 @@
+python -m venv build123d
+
+source build123d/Scripts/activate
+
+pip install cadquery
+pip install build123d
+pip install vtk
+pip install cq-warehouse
+
+python -m ocp_viewer&
+
