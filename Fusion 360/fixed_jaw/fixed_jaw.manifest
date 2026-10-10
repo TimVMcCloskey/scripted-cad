@@ -1,0 +1,10 @@
+{
+    "autodeskProduct": "Fusion360",
+    "type": "script",
+    "author": "Tim",
+    "description": {
+        "": "Parametric Fixed Jaw Generator using Custom CAD Library"
+    },
+    "supportedOS": "windows|mac",
+    "editEnabled": true
+}
